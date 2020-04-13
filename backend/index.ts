@@ -22,7 +22,9 @@ router.get("/api", (req: express.Request, res: express.Response) => {
   res.send(req.query);
 });
 router.post("/api", (req: express.Request, res: express.Response) => {
-  res.send(req.body);
+  res.send({
+    message: req.body.text,
+  });
 });
 app.use(router);
 
