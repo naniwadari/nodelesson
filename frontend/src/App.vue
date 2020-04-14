@@ -1,9 +1,8 @@
 <template>
   <div id="app">
     <MsgList v-for="list in lists" :key="list.id" :list="list" />
-    <input type="text" @keyup.enter="post" />
     <p>--------------------</p>
-    <HelloWorld />
+    <input type="text" @keyup.enter="post" />
   </div>
 </template>
 
@@ -23,8 +22,18 @@ import { createInitialLists } from "./initialData";
   }
 })
 export default class App extends Vue {
-  lists: IMsgList[] = createInitialLists();
+  lists: IMsg[] = [];
   MsgCreatedCount = 2;
+
+  public created() {
+    this.getMsgList();
+    console.log(this.lists);
+  }
+
+  async getMsgList() {
+    const response = await Methods.Getting();
+    this.lists = response.data;
+  }
 
   addMsg(event: Event & { currentTarget: HTMLInputElement }): void {
     const newMsg = {
@@ -43,9 +52,8 @@ export default class App extends Vue {
       text: event.currentTarget.value
     };
     const response = await Methods.Posting(newMsg);
-    const obj: object = new Function("return " + response.config.data)();
-    console.log(obj);
-    this.lists.push(obj);
+    const msg: IMsg = new Function("return " + response.config.data)();
+    this.lists.push(msg);
     ++this.MsgCreatedCount;
   }
 }

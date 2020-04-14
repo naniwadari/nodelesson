@@ -4,6 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 var express_1 = __importDefault(require("express"));
+var types_1 = require("./src/types");
 var app = express_1.default();
 //corsの許可
 app.use(function (req, res, next) {
@@ -17,7 +18,7 @@ app.use(express_1.default.urlencoded({ extended: true }));
 //GetとPostのルーティング
 var router = express_1.default.Router();
 router.get("/api", function (req, res) {
-    res.send(req.query);
+    res.send(types_1.createInitialLists());
 });
 router.post("/api", function (req, res) {
     res.send({

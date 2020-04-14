@@ -1,4 +1,5 @@
 import express from "express";
+import { createInitialLists } from "./src/types";
 
 const app: express.Express = express();
 
@@ -19,7 +20,8 @@ app.use(express.urlencoded({ extended: true }));
 //GetとPostのルーティング
 const router: express.Router = express.Router();
 router.get("/api", (req: express.Request, res: express.Response) => {
-  res.send(req.query);
+  const initialData = createInitialLists();
+  res.send(initialData);
 });
 router.post("/api", (req: express.Request, res: express.Response) => {
   res.send({
