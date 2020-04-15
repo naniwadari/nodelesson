@@ -1,3 +1,8 @@
+export interface IMsg {
+  id: number;
+  text: string;
+}
+
 export function createInitialLists() {
   return [
     {

@@ -1,0 +1,17 @@
+version: "3.1"
+services:
+  mysql:
+    image: mysql:5.7
+    restart: always
+    hostname: node-mysql
+    environment:
+      MYSQL_USER: root
+      MYSQL_ROOT_PASSWORD: password
+      MYSQL_DATABASE: nodelesson
+      TZ: "Asia/Tokyo"
+      BIND-ADDRESS: 0.0.0.0
+    ports:
+      - 3306:3306
+    volumes:
+      - ./src/mysql_data:/var/lib/mysql
+    tty: true
