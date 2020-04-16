@@ -21,4 +21,4 @@ yarn-error.log*
 *.sw?
 
 # local Mysql storage
-mysql_data
+/backend/src/mysql_data/
