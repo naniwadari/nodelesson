@@ -8,5 +8,13 @@ export default {
 
   Getting() {
     return Api().get("/api");
+  },
+
+  patch(id: number, item: Object) {
+    return Api().patch(`/api/${id}`, item);
+  },
+
+  delete(id: number) {
+    return Api().delete(`/api/${id}`);
   }
 };

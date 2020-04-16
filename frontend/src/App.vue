@@ -1,8 +1,15 @@
 <template>
   <div id="app">
-    <MsgList v-for="list in lists" :key="list.id" :list="list" />
+    <MsgList
+      v-for="list in lists"
+      :key="list.id"
+      :list="list"
+      :msgText.sync="list.text"
+      @remove-msg="removeMsg"
+      @update-msg="updateMsg"
+    />
     <p>--------------------</p>
-    <input type="text" @keyup.enter="post" />
+    <input type="text" @keyup.enter="postMsg" v-model="inputValue" />
   </div>
 </template>
 
@@ -17,17 +24,15 @@ import { createInitialLists } from "./initialData";
 
 @Component({
   components: {
-    MsgList,
-    HelloWorld
+    MsgList
   }
 })
 export default class App extends Vue {
   lists: IMsg[] = [];
-  MsgCreatedCount = 2;
+  inputValue: string = "";
 
   public created() {
     this.getMsgList();
-    console.log(this.lists);
   }
 
   async getMsgList() {
@@ -35,26 +40,26 @@ export default class App extends Vue {
     this.lists = response.data;
   }
 
-  addMsg(event: Event & { currentTarget: HTMLInputElement }): void {
+  async postMsg(event: Event & { currentTarget: HTMLInputElement }) {
     const newMsg = {
-      id: this.MsgCreatedCount + 1,
-      text: event.currentTarget.value
-    };
-    console.log(newMsg);
-    this.lists.push(newMsg);
-    ++this.MsgCreatedCount;
-    event.currentTarget.value = "";
-  }
-
-  async post(event: Event & { currentTarget: HTMLInputElement }) {
-    const newMsg = {
-      id: this.MsgCreatedCount + 1,
       text: event.currentTarget.value
     };
     const response = await Methods.Posting(newMsg);
-    const msg: IMsg = new Function("return " + response.config.data)();
-    this.lists.push(msg);
-    ++this.MsgCreatedCount;
+    this.lists.push(response.data);
+    this.inputValue = "";
+  }
+
+  async updateMsg(msg: IMsg) {
+    const msgIndex = this.lists.findIndex(list => list.id === msg.id);
+    if (msgIndex === -1) return;
+    const response = await Methods.patch(msg.id, msg);
+  }
+
+  async removeMsg(msgId: number) {
+    const msgIndex = this.lists.findIndex(list => list.id === msgId);
+    if (msgIndex === -1) return;
+    const response = await Methods.delete(msgId);
+    this.lists.splice(msgIndex, 1);
   }
 }
 </script>
